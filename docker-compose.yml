@@ -30,3 +30,7 @@ services:
       - "traefik.http.middlewares.docker-mirror-rewrite.replacepathregex.regex=^/v2/(?:library)?/?(.*)"
       - "traefik.http.middlewares.docker-mirror-rewrite.replacepathregex.replacement=/v2/library/$$1"
       - "traefik.http.routers.docker-mirror.middlewares=docker-mirror-rewrite"
+      - "traefik.http.routers.docker-mirror-v2.rule=Host(`${HOSTNAME}`) && PathPrefix(`/v2/`)"
+      - "traefik.http.routers.docker-mirror-v2.entrypoints=https"
+      - "traefik.http.routers.docker-mirror-v2.tls=true"
+      - "traefik.http.routers.docker-mirror-v2.tls.certresolver=letsencrypt"
