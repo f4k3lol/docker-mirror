@@ -14,7 +14,6 @@ services:
   registry:
     image: registry:2.8
     restart: unless-stopped
-    networks: [monitoring]
     volumes:
       - ./config.yml:/etc/docker/registry/config.yml:ro
       - ./data:/var/lib/registry
