@@ -1,0 +1,33 @@
+services:
+  traefik:
+    networks:
+      - monitoring
+    image: traefik:3.0
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      # - "8080:8080" - для открытия дашборда раскомментить
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./certs:/etc/traefik/acme
+
+  registry:
+    image: registry:2.8.3
+    restart: unless-stopped
+    networks: [monitoring]
+    volumes:
+      - ./config.yml:/etc/docker/registry/config.yml:ro
+      - ./data:/var/lib/registry
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.docker-mirror.loadbalancer.server.port=5000"
+      - "traefik.http.routers.docker-mirror.service=docker-mirror"
+      - "traefik.http.routers.docker-mirror.rule=Host(`${HOSTNAME}`)"
+      - "traefik.http.routers.docker-mirror.entrypoints=https"
+      - "traefik.http.routers.docker-mirror.tls=true"
+      - "traefik.http.routers.docker-mirror.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.docker-mirror-rewrite.replacepathregex.regex=^/v2/(?:library)?/?(.*)"
+      - "traefik.http.middlewares.docker-mirror-rewrite.replacepathregex.replacement=/v2/library/$$1"
+      - "traefik.http.routers.docker-mirror.middlewares=docker-mirror-rewrite"

@@ -1,0 +1,30 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+api:
+  dashboard: true
+  insecure: true
+metrics:
+  prometheus:
+    entryPoint: metrics
+entryPoints:
+  http:
+    address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+  https:
+    address: :443
+  traefik:
+    address: :8080
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "example@gmail.com"
+      storage: /etc/traefik/acme/acme.json
+      tlsChallenge: {}
+providers:
+  docker:
+    exposedByDefault: false
