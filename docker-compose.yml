@@ -1,7 +1,5 @@
 services:
   traefik:
-    networks:
-      - monitoring
     image: traefik:3.0
     restart: unless-stopped
     ports:
@@ -14,7 +12,7 @@ services:
       - ./certs:/etc/traefik/acme
 
   registry:
-    image: registry:2.8.3
+    image: registry:2.8
     restart: unless-stopped
     networks: [monitoring]
     volumes:
