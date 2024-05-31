@@ -20,4 +20,4 @@ docker pull example.com/nginx:latest
 1. Создать А запись в днс, указывающую на ip сервера, куда будет устанавливаться docker-mirror, указать ее в [.env](.env)
 2. Изменить acme email в [traefik.yml](traefik.yml) (опционально)
 3. Установить docker, docker-compose
-5. `docker-compose up -d`
+4. `docker-compose up -d`
